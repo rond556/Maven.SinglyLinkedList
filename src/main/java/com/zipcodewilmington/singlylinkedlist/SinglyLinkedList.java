@@ -10,132 +10,108 @@ import java.util.ListIterator;
  * Created by leon on 1/10/18.
  */
 public class SinglyLinkedList {
+    private Node head;
 
-    public static Integer counter;
-        private Node head;
+    public SinglyLinkedList() {
+    }
 
-        public SinglyLinkedList(){
+    public void append(Integer input) {
+        if (head == null) {
+            head = new Node(input);
+        }
+        Node current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+        current.next = new Node(input);
+    }
+
+    public void remove(Integer index){
+        if(index == 0){
+            head = head.next;
         }
 
-        public void add(Object input) {
-            if (head == null) {
-                head = new Node(input);
-            }
-            Node temporary = new Node(input);
-            Node current = head;
-
-            if (current != null) {
-                while (current.getNext() != null) {
-                    current = current.getNext();
-                }
-                current.setNext(current);
-            }
-            incrementCounter();
+        Node current = head;
+        for(int i = -1; i < index - 1; i++) {
+            current = current.next;
+        }
+        current.next = current.next.next;
         }
 
+    public Integer get(Integer input) {
+        Integer counter = -1;
 
-        private static Integer getCounter() {
-            return counter;
-        }
-
-        public static void incrementCounter() {
+        Node current = head;
+        while(current != null){
+            if(current.data.equals(input))
+                return counter;
             counter++;
+            current = current.next;
         }
+        return -1;
+    }
 
-        public void decrementCounter() {
-            counter--;
+    public Boolean contains(Integer input){
+        Node current = head;
+        if(current.data.equals(input)){
+            return true;
         }
-
-        public void add(Object input, Integer index) {
-            Node temporary = new Node(input);
-            Node current = head;
-
-            if(current != null) {
-                for (int i = 0; i < index && current.getNext() != null; i++){
-                    current = current.getNext();
+            while(current.next != null){
+                if(current.data.equals(input)){
+                    return true;
                 }
-            }
-            temporary.setNext(current.getNext());
-            current.setNext(temporary);
-            incrementCounter();
-        }
-
-        public Object get(Integer index) {
-            if (index < 0)
-                return null;
-            Node current = null;
-            if(head != null) {
-                current = head.getNext();
-                for (int i = 0; i < index; i++) {
-                    if (current.getNext() == null) {
-                        return null;
-                    }
-                    current = current.getNext();
-                }
-                return current.getData();
-            }
-            return current;
-        }
-
-        public Boolean remove(Integer index) {
-            if(index < 1 || index > size())
-                return false;
-
-            Node current = head;
-            if(head != null) {
-                for (int i = 0; i < index; i++) {
-                    if (current.getNext() == null) {
-                        return false;
-                    }
-                    current = current.getNext();
-                }
-                current.setNext(current.getNext().getNext());
-
-                decrementCounter();
-                return true;
+                current = current.next;
             }
             return false;
+    }
+
+
+    public Integer size() {
+        Integer counter = 0;
+        Node current = head;
+        while(current.next != null){
+            counter++;
+            current = current.next;
         }
+        return counter;
+    }
 
-        public Integer size() {
-            return getCounter();
+    public SinglyLinkedList copy(){
+        SinglyLinkedList copyList = new SinglyLinkedList();
+        Node current = head;
+        while(current.next != null){
+            copyList.append(current.data);
+            current = current.next;
         }
+        return copyList;
+    }
 
-        public String toString() {
-            String output = "";
-
-            if (head != null) {
-                Node current = head.getNext();
-                while (current != null){
-                    output += "[" + current.getData().toString() + "]";
-                    current=current.getNext();
+    public void sort(SinglyLinkedList list) {
+        SinglyLinkedList sortedList = new SinglyLinkedList();
+        Integer size = list.size();
+        Node current = head;
+        for(int i = 0; i < size; i++){
+            Integer temp = head.data;
+            while(current.next != null){
+                if(current.data > current.next.data){
+                temp = current.data;
                 }
+                current = current.next;
             }
-            return output;
+            sortedList.append(temp);
+            this.remove(this.get(temp));
+        }this.head = sortedList.head;
+
         }
 
 
-    private class Node{
-
+    private class Node {
         Node next;
-        Object data;
+        Integer data;
 
-        public Node(Object dataValue) {
-            next = null;
+        public Node(Integer dataValue) {
             data = dataValue;
         }
-
-        public Object getData(){
-            return data;
-        }
-
-        public void setNext(Node nextValue){
-            next = nextValue;
-        }
-
-        public Node getNext(){
-            return next;
-        }
-        }
     }
+}
 
